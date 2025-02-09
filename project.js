@@ -1,4 +1,4 @@
-//3. Collect bet amount
+
 //4. Spin the slot machine
 //5. Check if the user won
 //6. Give the user their winnings
@@ -34,5 +34,21 @@ const getNumberOfLines = () => {
     }
 }
 
-const depositAmount = Deposit();
+//3. Collect bet amount
+const getBetAmount = () => {
+    while (true) {
+        const betAmount = prompt("Enter the amount you want to bet: ");
+        const numberBetAmount = parseFloat(betAmount);
+
+        if (isNaN(numberBetAmount) || numberBetAmount <= 0 || numberBetAmount > balance) {
+            console.log("Invalid bet amount. Please enter a positive number less than or equal to your balance.");
+        } else {
+            return numberBetAmount;
+        }    
+    }
+}
+
+
+let balance = Deposit();
 const numberOfLines = getNumberOfLines();
+const betAmount = getBetAmount();
