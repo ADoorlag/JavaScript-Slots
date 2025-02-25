@@ -1,5 +1,3 @@
-//7. Play again
-
 const prompt = require("prompt-sync")();
 
 // Constants
@@ -100,6 +98,19 @@ const transpose = (reels) => {
     return rows
 }
 
+const printRows = (rows) => {
+    for (const row of rows) {
+        let rowString = "";
+        for (const [i, symbol] of row.entries()) {
+            rowString += symbol;
+            if (i != row.length - 1) {
+                rowString += " | ";
+            }
+        }
+        console.log(rowString);
+    }    
+}
+
 //6. Give the user their winnings
 const getWinnings = (rows, bet, lines) => {
     let winnings = 0;
@@ -122,25 +133,35 @@ const getWinnings = (rows, bet, lines) => {
     return winnings
 }
 
-const printRows = (rows) => {
-    for (const row of rows) {
-        let rowString = "";
-        for (const [i, symbol] of row.entries()) {
-            rowString += symbol;
-            if (i != row.length - 1) {
-                rowString += " | ";
-            }
+//7. Play again
+const game = () => {
+    let balance = Deposit();
+
+    while (true) {
+        console.log("You have a balance of $" + balance);
+        const numberOfLines = getNumberOfLines();
+        const betAmount = getBetAmount(balance, numberOfLines);
+        balance -= betAmount * numberOfLines;
+        const reels = spin();
+        const rows = transpose(reels);
+        printRows(rows);
+        const winnings = getWinnings(rows, betAmount, numberOfLines);
+        balance += winnings;
+        console.log("You won: $" + winnings.toString());
+
+        if (balance <= 0) {
+            console.log("You ran out of money!");
+            break;
         }
-        console.log(rowString);
-    }    
+
+        const playAgain = prompt("Do you want to play again? (y/n): ").toLowerCase();
+        if (playAgain !== "y") {
+            break;
+        }
+    }
 }
 
+game();
 
-let balance = Deposit();
-const numberOfLines = getNumberOfLines();
-const betAmount = getBetAmount(balance, numberOfLines);
-const reels = spin();
-const rows = transpose(reels);
-printRows(rows);
-const winnings = getWinnings(rows, betAmount, numberOfLines);
-console.log("You won: $" + winnings.toString());
+
+
